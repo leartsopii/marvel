@@ -1,31 +1,34 @@
 import './App.css';
 import Header from './Components/Header'
-import CharacterTable from './Components/CharacterTable'
+import ComicTable from './Components/ComicTable'
 import axios from 'axios'
 import React , {useEffect,useState} from 'react'
-import Search from './Components/Search'
+import Searchc from './Components/Searchcomics'
 
 const hash =  "bd0722d5750b6362d5ba0212ca36726b"
 
-function App() {
+function App2() {
   const[items,setItems] = useState([])
   const[isLoading,setLoading] = useState(true)
   const [query,setQuery] = useState('')
+  
 
-  useEffect(()=>{
+  useEffect(()=>{ 
       const fetch = async()=>{
         if(query===''){
           // checking if favorites array is empty or does not exist
           if(localStorage.getItem('favorites')==='[]' || !localStorage.getItem('favorites')){
             localStorage.setItem('favorites', '[]')
-            const result = await axios(`http://gateway.marvel.com/v1/public/characters?ts=1&apikey=344d40df0c8cc373141c1dc321fae9cf&hash=${hash}`)
+            const result = await axios(`http://gateway.marvel.com/v1/public/comics?ts=1&apikey=344d40df0c8cc373141c1dc321fae9cf&hash=${hash}`)
+            console.log(result.data.data.results)
             setItems(result.data.data.results)
             setLoading(false) 
           }
           
           
         }else{
-          const result = await axios(`http://gateway.marvel.com/v1/public/characters?nameStartsWith=${query}&ts=1&apikey=344d40df0c8cc373141c1dc321fae9cf&hash=${hash}`)
+          const result = await axios(`http://gateway.marvel.com/v1/public/comics?titleStartsWith=${query}&ts=1&apikey=344d40df0c8cc373141c1dc321fae9cf&hash=${hash}`)
+          console.log(result.data.data.results)
           setItems(result.data.data.results)
           setLoading(false)
         }
@@ -38,10 +41,10 @@ function App() {
   return (
     <div className="container">
       <Header />
-      <Search search={(q)=>setQuery(q)}></Search>
-      <CharacterTable items={items} isLoading={isLoading} />
+      <Searchc search={(q)=>setQuery(q)}></Searchc>
+      <ComicTable items={items} isLoading={isLoading} />
     </div>
   );
 }
 
-export default App;
+export default App2;
